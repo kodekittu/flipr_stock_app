@@ -112,8 +112,8 @@ class _SigninPageState extends State<SigninPage> {
                       child: RaisedButton(
                         padding: EdgeInsets.symmetric(vertical: 16.0),
                         color: Colors.lightBlueAccent,
-                        onPressed: (){
-                          //logIn(usernameController.text, passwordController.text);
+                        onPressed: () async{
+                          await logIn(usernameController.text, passwordController.text);
                           Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(builder: (BuildContext context) => HomePage()),
@@ -134,7 +134,7 @@ class _SigninPageState extends State<SigninPage> {
                         FlatButton(
                           child: Text("Sign up", style: TextStyle(fontWeight: FontWeight.bold),),
                           textColor: Colors.lightBlueAccent,
-                          onPressed: (){
+                          onPressed: () {
                             Navigator.pushNamed(context, '/signup');
                           },
                         )
@@ -152,19 +152,22 @@ class _SigninPageState extends State<SigninPage> {
 
   Future<http.Response> logIn(String username, String password)
   async {
-    final url = 'https://newsjone.com/UserRegistration/Login.php?email=$username&password=$password';
+    final url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAneWzjmbqe3PQ3mMYRtCMG9M8495vIzUQ';
     setState(() {
       isLoading = true;
     });
     try {
-      final response = await http.post(url, headers: {"Content-Type": "application/json"});
+      final response = await http.post(url, headers: {"Content-Type": "application/json"}, body: json.encode({
+        'email' : username,
+        'password': password
+      }));
 
       print("${response.statusCode}");
       print("${response.body}");
 
-     String res = response.body;
+     final res = json.decode(response.body);
 
-      if(res == "success"){
+      if(res['localId'] != null){
         await Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (BuildContext context) => HomePage()),
