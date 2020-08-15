@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
               child: ListView(
                 children: [
                   Container(
-                    child: graphChart(),
+                    child: graphChart(context),
                   ),
                   Divider(
                     color: Colors.grey,
