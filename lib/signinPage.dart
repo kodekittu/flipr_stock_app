@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:http/http.dart' as http;
@@ -70,8 +71,8 @@ class _SigninPageState extends State<SigninPage> {
                         controller: usernameController,
                         style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.person, color: Colors.black26,),
-                          hintText: "Username",
+                          prefixIcon: Icon(Icons.email, color: Colors.black26,),
+                          hintText: "Email",
                           hintStyle: TextStyle(color: Colors.black26),
                           filled: true,
                           fillColor: Colors.white,
@@ -113,11 +114,18 @@ class _SigninPageState extends State<SigninPage> {
                         padding: EdgeInsets.symmetric(vertical: 16.0),
                         color: Colors.lightBlueAccent,
                         onPressed: () async{
-                          await logIn(usernameController.text, passwordController.text);
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (BuildContext context) => HomePage()),
-                                  (Route<dynamic> route) => false);
+                          print("${usernameController.text}.........................    ${passwordController.text}");
+                          if(usernameController.text == ""){
+                            showToast("Please fill Email");
+                          }else if(passwordController.text == ""){
+                            showToast("Please fill Password");
+                          }else{
+                            await logIn(usernameController.text, passwordController.text);
+                          }
+                        // Navigator.pushAndRemoveUntil(
+                        //     context,
+                        //     MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+                        //         (Route<dynamic> route) => false);
                         },
                         elevation: 11,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
@@ -126,7 +134,10 @@ class _SigninPageState extends State<SigninPage> {
                         )),
                       ),
                     )
-                    : CircularProgressIndicator(backgroundColor: Colors.lightBlueAccent,),
+                    : Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: CircularProgressIndicator(backgroundColor: Colors.lightBlueAccent,),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -168,6 +179,8 @@ class _SigninPageState extends State<SigninPage> {
      final res = json.decode(response.body);
 
       if(res['localId'] != null){
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        pref.setString("idToken", res["idToken"]);
         await Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (BuildContext context) => HomePage()),

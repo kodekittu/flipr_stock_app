@@ -1,3 +1,5 @@
+import 'package:flipr_stock_app/chart/chart.dart';
+import 'package:flipr_stock_app/widgets/notificationBar.dart';
 import 'package:flipr_stock_app/widgets/returns.dart';
 import 'package:flipr_stock_app/widgets/withSlider.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  bool nTap = false;
   final TextStyle dropdownMenuLabel =
   TextStyle(color: Colors.white, fontSize: 18);
   final TextStyle dropdownMenuItem =
@@ -39,9 +42,14 @@ class _HomePageState extends State<HomePage> {
                     child: Row( mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.notifications_none, color: Colors.white,),
+                          icon: Icon(
+                            nTap != false ? Icons.notifications_active : Icons.notifications_none,
+                            color: Colors.white,
+                          ),
                           onPressed: (){
-
+                            setState(() {
+                              nTap = !nTap;
+                            });
                           },
                         ),
                         IconButton(
@@ -62,6 +70,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            nTap == true ? notificationBar(): Container(),
             Container(
               alignment: Alignment.topLeft,
               color: Colors.blueGrey[900],
@@ -130,11 +139,11 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Container(
-              height: data.size.height* 0.62,
+              height: nTap == false ? data.size.height* 0.63 : data.size.height* 0.46,
               child: ListView(
                 children: [
                   Container(
-                    height: 260,
+                    child: graphChart(),
                   ),
                   Divider(
                     color: Colors.grey,

@@ -41,5 +41,7 @@ showToast(String text) {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      fontSize: 16.0);
+      fontSize: 16.0,
+    textColor: Colors.tealAccent
+  );
 }

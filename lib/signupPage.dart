@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +19,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
 
-  final usernameController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isLoading  = false;
@@ -70,31 +71,10 @@ class _SignupPageState extends State<SignupPage> {
                       elevation: 11,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
                       child: TextField(
-                        controller: usernameController,
-                        style: TextStyle(color: Colors.black),
-                        decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.person, color: Colors.black26,),
-                            hintText: "Username",
-                            hintStyle: TextStyle(color: Colors.black26),
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0)
-                        ),
-                      ),
-                    ),
-                    Card(
-                      margin: EdgeInsets.only(left: 30, right:30, top:20),
-                      elevation: 11,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-                      child: TextField(
                         controller: emailController,
                         style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.person, color: Colors.black26,),
+                            prefixIcon: Icon(Icons.email, color: Colors.black26,),
                             hintText: "Email",
                             hintStyle: TextStyle(color: Colors.black26),
                             filled: true,
@@ -117,6 +97,27 @@ class _SignupPageState extends State<SignupPage> {
                         decoration: InputDecoration(
                             prefixIcon: Icon(Icons.lock, color: Colors.black26,),
                             hintText: "Password",
+                            hintStyle: TextStyle(color: Colors.black26),
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.all(Radius.circular(40.0)),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0)
+                        ),
+                      ),
+                    ),
+                    Card(
+                      margin: EdgeInsets.only(left: 30, right:30, top:20),
+                      elevation: 11,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
+                      child: TextField(
+                        controller: confirmPasswordController,
+                        style: TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.lock_open, color: Colors.black26,),
+                            hintText: "Confirm Password",
                             hintStyle: TextStyle(
                               color: Colors.black26,
                             ),
@@ -137,18 +138,25 @@ class _SignupPageState extends State<SignupPage> {
                         padding: EdgeInsets.symmetric(vertical: 16.0),
                         color: Colors.lightBlueAccent,
                         onPressed: () async{
-                         if(usernameController.text !=null && passwordController.text  !=null && emailController.text  !=null )  {
-                           await signup(usernameController.text, passwordController.text, emailController.text, widget.brand, widget.devices);
-                           Navigator.pushAndRemoveUntil(
-                               context,
-                               MaterialPageRoute(builder: (BuildContext context) => HomePage()),
-                                   (Route<dynamic> route) => false);
+                         if(confirmPasswordController.text !="" && passwordController.text  !="" && emailController.text  !="" )  {
+                           if(passwordController.text == confirmPasswordController.text) {
+                             await signup(
+                                 passwordController.text, emailController.text);
+                           }else{
+                             showToast("Password is wrong");
+                           }
+                      //    Navigator.pushAndRemoveUntil(
+                      //        context,
+                      //        MaterialPageRoute(builder: (BuildContext context) => HomePage()),
+                      //            (Route<dynamic> route) => false);
+                         }else{
+                           showToast("Please fill all details");
                          }
                         },
                         elevation: 11,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
                         child: Text("Sign up", style: TextStyle(
-                            color: Colors.white70
+                            color: Colors.white, fontWeight: FontWeight.bold
                         )),
                       ),
                     )
@@ -180,7 +188,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
 
-  Future<http.Response> signup(String username, String password, String email, String brand, String device)
+  Future<http.Response> signup(String password, String email,)
   async {
     final url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAneWzjmbqe3PQ3mMYRtCMG9M8495vIzUQ';
     setState(() {
@@ -198,12 +206,14 @@ class _SignupPageState extends State<SignupPage> {
       String res = response.body;
 
       if(responseData['idToken'] != null){
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        pref.setString("idToken", responseData['idToken']);
         await Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (BuildContext context) => HomePage()),
                 (Route<dynamic> route) => false);
       }else{
-        showToast(res);
+        showToast("User Already Exist");
         setState(() {
           isLoading = false;
         });
