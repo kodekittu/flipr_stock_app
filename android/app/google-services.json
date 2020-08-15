@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "185678256280",
+    "firebase_url": "https://onesaz-450a1.firebaseio.com",
+    "project_id": "onesaz-450a1",
+    "storage_bucket": "onesaz-450a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185678256280:android:554a1455d85d6a20cad8ed",
+        "android_client_info": {
+          "package_name": "com.kodekittu.flipr_stock_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "185678256280-fh4h15ocatqqncles1nh5r0r6qcqkjm0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kodekittu.flipr_stock_app",
+            "certificate_hash": "ad2ffc8dab83b0db21625f3f02e107f66400ea77"
+          }
+        },
+        {
+          "client_id": "185678256280-26tjcipm2dkk0m09b65rld5a986ap2nn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAneWzjmbqe3PQ3mMYRtCMG9M8495vIzUQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "185678256280-26tjcipm2dkk0m09b65rld5a986ap2nn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
