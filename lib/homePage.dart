@@ -13,6 +13,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  final TextStyle dropdownMenuLabel =
+  TextStyle(color: Colors.white, fontSize: 18);
+  final TextStyle dropdownMenuItem =
+  TextStyle(color: Colors.white, fontSize: 18);
+  List<String> company = ["ASHOKLEY", "BSE (Sensex)", "BSESN", "CIPLA", "EICHERMOT", "NSE (Nifty)", "NSEI", "RELIANCE", "TATASTEEL"];
+  var selectedCompIndex = 0;
+
   DateTime d = DateTime.now();
   @override
   Widget build(BuildContext context) {
@@ -62,21 +69,15 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: [
-                          Text("SENSEX   ",
-                          style: TextStyle(fontSize: 18),
-                          ),
-                          Text("23416.43",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold
-                            ),
-                          ),
-                        ],
+                  ListTile(
+                    dense: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 1),
+                      title: dropDown(),
+                      subtitle: Text("23416.43 ",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold
+                        ),
                       ),
-                    ],
                   ),
                     SizedBox(height: 6),
                     Row( mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -129,7 +130,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Container(
-              height: data.size.height* 0.67,
+              height: data.size.height* 0.62,
               child: ListView(
                 children: [
                   Container(
@@ -192,7 +193,6 @@ class _HomePageState extends State<HomePage> {
                       tile("200 DAYS", "34,864.87"),
                     ],
                   ),
-
                 ],
               ),
             )
@@ -202,6 +202,50 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget dropDown(){
+    return
+      PopupMenuButton(
+        onSelected: (index) {
+          setState(() {
+            selectedCompIndex = index;
+          });
+        },
+        child: Row(
+          children: <Widget>[
+            Text(
+              company[selectedCompIndex],
+              style: dropdownMenuLabel,
+            ),
+            Icon(
+              Icons.keyboard_arrow_down,
+              size: 40,
+              color: Colors.black,
+            )
+          ],
+        ),
+        itemBuilder: (BuildContext context) =>
+        <PopupMenuItem<int>>[
+          menuItem(0),
+          menuItem(1),
+          menuItem(2),
+          menuItem(3),
+          menuItem(4),
+          menuItem(5),
+          menuItem(6),
+          menuItem(7),
+          menuItem(8),
+        ],
+      );
+  }
+  Widget menuItem(int x){
+    return PopupMenuItem(
+      child: Text(
+        company[x],
+        style: dropdownMenuItem,
+      ),
+      value: x,
+    );
+  }
   Widget heading(String title){
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -209,7 +253,7 @@ class _HomePageState extends State<HomePage> {
         title, 
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 20
+          fontSize: 19
         ),
       ),
     );

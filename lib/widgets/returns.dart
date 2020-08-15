@@ -6,7 +6,7 @@ Widget returnTile(String title, String val, Color color){
     child: Column(
       children: [
         ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 2),
+          contentPadding: EdgeInsets.symmetric(horizontal: 2,),
           dense: true,
           title: Text(title,
             style: TextStyle(
@@ -17,7 +17,7 @@ Widget returnTile(String title, String val, Color color){
           subtitle: Text(val,
             style: TextStyle(
                 color: color,
-                fontSize: 12,
+                fontSize: 12.8,
             ),
           ),
         ),
