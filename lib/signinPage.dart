@@ -180,7 +180,7 @@ class _SigninPageState extends State<SigninPage> {
 
       if(res['localId'] != null){
         SharedPreferences pref = await SharedPreferences.getInstance();
-        pref.setString("idToken", res["idToken"]);
+        pref.setBool("logedin", true);
         await Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (BuildContext context) => HomePage()),

@@ -207,7 +207,7 @@ class _SignupPageState extends State<SignupPage> {
 
       if(responseData['idToken'] != null){
         SharedPreferences pref = await SharedPreferences.getInstance();
-        pref.setString("idToken", responseData['idToken']);
+        pref.setBool("logedin", true);
         await Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (BuildContext context) => HomePage()),
