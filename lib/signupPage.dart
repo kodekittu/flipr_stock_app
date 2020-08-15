@@ -139,10 +139,11 @@ class _SignupPageState extends State<SignupPage> {
                         onPressed: (){
                        //  if(usernameController.text !=null && passwordController.text  !=null && emailController.text  !=null )
                        //  signup(usernameController.text, passwordController.text, emailController.text, widget.brand, widget.devices);
-                          Navigator.pushAndRemoveUntil(
+                          Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (BuildContext context) => HomePage()),
-                                  (Route<dynamic> route) => false);
+                              MaterialPageRoute(builder: (BuildContext context) => HomePage())
+                          );
+                            //      (Route<dynamic> route) => false);
                         },
                         elevation: 11,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),

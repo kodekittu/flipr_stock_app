@@ -114,10 +114,11 @@ class _SigninPageState extends State<SigninPage> {
                         color: Colors.lightBlueAccent,
                         onPressed: (){
                           //logIn(usernameController.text, passwordController.text);
-                          Navigator.pushAndRemoveUntil(
+                          Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (BuildContext context) => HomePage()),
-                                  (Route<dynamic> route) => false);
+                              MaterialPageRoute(builder: (BuildContext context) => HomePage())
+                          );
+                           //       (Route<dynamic> route) => false);
                         },
                         elevation: 11,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
