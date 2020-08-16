@@ -6,6 +6,8 @@ import 'package:flipr_stock_app/model/retutnSingleStock.dart';
 import 'package:flipr_stock_app/model/stock.dart';
 import 'package:intl/intl.dart';
 
+import 'model/ChartGraphData.dart';
+
 class ProviderTemp {
   final firestoreInstance = Firestore.instance;
   int i;
@@ -34,7 +36,24 @@ class ProviderTemp {
     }
 
   }
-
+  Future<List<ChartGraphData> > getListOfStockData(String collectionName, DateTime dateTime) async{
+    List<ChartGraphData > listOfData = [];
+    print("yes");
+    for(int i=0; i<15; ++i) {
+      try {
+        await firestoreInstance.collection(collectionName).document(DateFormat("y-MM-dd").format(dateTime)).get().then((value) {
+          print(value.data['Open']);
+          listOfData.add(ChartGraphData(dateTime,value.data['Open']));
+        });
+        dateTime.subtract(Duration(days: 1));
+      }
+      catch(e) {
+        print(e);
+      }
+    }
+    print("$i done");
+    return listOfData;
+  }
   Future<void> stockToReturn(DateTime dateTime, double stockPriceOfDay, String collectionName) async{
     ReturnSingleStock YTD;
     ReturnSingleStock oneWeek;

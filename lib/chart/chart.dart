@@ -1,11 +1,13 @@
 
+import 'package:flipr_stock_app/model/ChartGraphData.dart';
+import 'package:flipr_stock_app/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-Widget graphChart(context) {
+Widget graphChart(context, ChartGraphData, isLoadedList) {
   MediaQueryData data = MediaQuery.of(context);
-    return Padding(
+    return isLoadedList ==false ? CircularProgressIndicator(backgroundColor: Colors.lightBlueAccent,) :Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -14,20 +16,18 @@ Widget graphChart(context) {
           child: SfCartesianChart(
             plotAreaBorderWidth: 0,
             primaryXAxis: DateTimeAxis(
-              maximum: DateTime(2020),
-                minimum: DateTime(2000),
                 intervalType: DateTimeIntervalType.days,
-                dateFormat: DateFormat.d(),
+                dateFormat: DateFormat("y-MM-dd"),
                 majorGridLines: MajorGridLines(width: 1),
             ),
             primaryYAxis: NumericAxis(
-                minimum: 200,
-                maximum: 600,
+                minimum: 0,
+                maximum: 6000,
                 interval: 100,
                 axisLine: AxisLine(width: 1),
                 labelFormat: '{value}',
                 majorTickLines: MajorTickLines(size: 0)),
-            series: getMultiColoredLineSeries(),
+            series: getMultiColoredLineSeries(ChartGraphData),
             trackballBehavior: TrackballBehavior(
                 enable: true,lineColor: Colors.lightBlueAccent,
                 activationMode: ActivationMode.singleTap,
@@ -39,8 +39,24 @@ Widget graphChart(context) {
     );
   }
 
-  List<LineSeries<_ChartData, DateTime>> getMultiColoredLineSeries() {
-    final List<_ChartData> chartData = <_ChartData>[
+  List<LineSeries<_ChartData, DateTime>> getMultiColoredLineSeries(List<ChartGraphData> chartGraphData) {
+    List<_ChartData> newList = [];
+    chartGraphData.forEach((element) {
+      newList.add(_ChartData(element.dateTime, element.value, Colors.red));
+    });
+    return <LineSeries<_ChartData, DateTime>>[
+      LineSeries<_ChartData, DateTime>(
+          enableTooltip: true,
+          animationDuration: 2500,
+          dataSource: newList,
+          xValueMapper: (_ChartData sales, _) => sales.x,
+          yValueMapper: (_ChartData sales, _) => sales.y,
+          /// The property used to apply the color each data.
+          pointColorMapper: (_ChartData sales, _) => sales.lineColor,
+          width: 2)
+    ];
+
+    /*final List<_ChartData> chartData = <_ChartData>[
       _ChartData(DateTime(2001), 390, const Color.fromRGBO(229, 101, 144, 1)),
       _ChartData(DateTime(2002), 450, const Color.fromRGBO(0, 189, 174, 1)),
       _ChartData(DateTime(2003), 440, const Color.fromRGBO(229, 101, 144, 1)),
@@ -73,7 +89,7 @@ Widget graphChart(context) {
           /// The property used to apply the color each data.
           pointColorMapper: (_ChartData sales, _) => sales.lineColor,
           width: 2)
-    ];
+    ];*/
   }
 
 

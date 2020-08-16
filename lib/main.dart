@@ -27,7 +27,9 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.dark
       ),
       debugShowCheckedModeBanner: false,
+
       initialRoute: '/',
+
       routes: {
         '/' : (context) => Load(),
         '/signin' : (context) => SigninPage(),
