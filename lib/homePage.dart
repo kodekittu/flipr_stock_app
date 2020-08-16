@@ -1,7 +1,11 @@
 import 'package:flipr_stock_app/chart/chart.dart';
+
 import 'package:flipr_stock_app/model/return.dart';
 import 'package:flipr_stock_app/model/retutnSingleStock.dart';
 import 'package:flipr_stock_app/model/stock.dart';
+
+import 'package:flipr_stock_app/model/ChartGraphData.dart';
+
 import 'package:flipr_stock_app/provider.dart';
 import 'package:flipr_stock_app/widgets/notificationBar.dart';
 import 'package:flipr_stock_app/widgets/returns.dart';
@@ -13,11 +17,13 @@ import 'package:intl/intl.dart';
 import 'widgets/tile.dart';
 
 class HomePage extends StatefulWidget {
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
 
   DateTime d = DateTime.now();
   ProviderTemp provider = ProviderTemp(0);
@@ -31,6 +37,11 @@ class _HomePageState extends State<HomePage> {
   );
   Stock sto;
   String companyData = "null";
+
+
+  ProviderTemp providerTemp = ProviderTemp(0);
+  List<ChartGraphData> listOfStockData = [];
+
   bool nTap = false;
   final TextStyle dropdownMenuLabel =
   TextStyle(color: Colors.white, fontSize: 18);
@@ -39,34 +50,59 @@ class _HomePageState extends State<HomePage> {
   List<String> company = ["ASHOKLEY", "BSE (Sensex)", "BSESN", "CIPLA", "EICHERMOT", "NSE (Nifty)", "NSEI", "RELIANCE", "TATASTEEL"];
   var selectedCompIndex = 0;
 
+ void getData(String comp, DateTime date) async{
+   await provider.getDataFromFirestore("ASHOKLEY", date.toString()).then((value) {
 
-// void getData(String comp, DateTime date) async{
-//   await provider.getDataFromFirestore("ASHOKLEY", date.toString()).then((value) {
+       st = Stock(
+         d,
+         provider.stock.openPrice,
+         provider.stock.closePrice,
+         provider.stock.volume,
+         provider.stock.high,
+         provider.stock.low,
+         provider.stock.adjClose,
+       );
+       rt = Return(
+         provider.returnData.YTD,
+         provider.returnData.oneWeek,
+         provider.returnData.oneMonth,
+         provider.returnData.threeMonth,
+         provider.returnData.sixMonth,
+         provider.returnData.oneYear,
+         provider.returnData.twoYear,
+         provider.returnData.threeMonth,
+       );
+     print(provider.stock.openPrice.toString());
+     print(provider.stock.closePrice.toString());
+     print(provider.stock.high.toString());
+   });
+ }
 
-//       st = Stock(
-//         d,
-//         provider.stock.openPrice,
-//         provider.stock.closePrice,
-//         provider.stock.volume,
-//         provider.stock.high,
-//         provider.stock.low,
-//         provider.stock.adjClose,
-//       );
-//       rt = Return(
-//         provider.returnData.YTD,
-//         provider.returnData.oneWeek,
-//         provider.returnData.oneMonth,
-//         provider.returnData.threeMonth,
-//         provider.returnData.sixMonth,
-//         provider.returnData.oneYear,
-//         provider.returnData.twoYear,
-//         provider.returnData.threeMonth,
-//       );
-//     print(provider.stock.openPrice.toString());
-//     print(provider.stock.closePrice.toString());
-//     print(provider.stock.high.toString());
-//   });
-// }
+  var _isinit=true;
+  var _isloading = false;
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if(_isinit){
+      setState(() {
+        _isloading=true;
+      });
+      providerTemp.getListOfStockData("ASHOKLEY", d).then((value) {
+        setState(() {
+          _isloading = false;
+          _isinit =false;
+          print("list of stock length ");
+          print(value.length);
+          listOfStockData = value;
+        });
+
+      });
+      if(listOfStockData.length!=0)
+        _isinit=false;
+//      _isinit=false;
+    }
+    super.didChangeDependencies();
+  }
 
   Future <bool> _onPressedBack(){
     return showDialog(
@@ -89,6 +125,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    /*initState(){
+        if(isLoadedList==false)
+        {
+          providerTemp.getListOfStockData("BSESN", d).then((value) {
+            setState(() {
+              listOfStockData = value;
+            });
+          });
+          setState(() {
+            isLoadedList = true;
+          });
+        }
+      }*/
     MediaQueryData data = MediaQuery.of(context);
     final orientation = MediaQuery.of(context).orientation;
     return WillPopScope(
@@ -208,7 +258,7 @@ class _HomePageState extends State<HomePage> {
                 child: ListView(
                   children: [
                     Container(
-                      child: graphChart(context),
+                      child:  graphChart(context, listOfStockData, _isloading),
                     ),
                     Divider(
                       color: Colors.grey,
