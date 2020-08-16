@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  String companyData = "null";
   ProviderTemp providerTemp = ProviderTemp(0);
   bool nTap = false;
   final TextStyle dropdownMenuLabel =
@@ -225,6 +226,11 @@ class _HomePageState extends State<HomePage> {
                         tile("200 DAYS", "34,864.87"),
                       ],
                     ),
+                    Container(
+                      child: Text(
+                        companyData, style: TextStyle(fontSize: 18),
+                      ),
+                    )
                   ],
                 ),
               )
@@ -236,12 +242,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget dropDown(){
+    ProviderTemp provider = ProviderTemp(0);
     return
       PopupMenuButton(
-        onSelected: (index) {
-          setState(() {
-            selectedCompIndex = index;
-          });
+        onSelected: (index)
+          async{
+            setState(() {
+              selectedCompIndex = index;
+            });
+            await provider.getDataFromFirestore(company[index],  "2015-08-14").then((value) {
+              print(provider.stock.openPrice.toString());
+              print(provider.returnData.oneMonth.price.toString());
+            });
+            setState(() {
+              companyData =" ${provider.stock.openPrice.toString()}       ${provider.returnData.oneMonth.price.toString()}";
+            });
         },
         child: Row(
           children: <Widget>[

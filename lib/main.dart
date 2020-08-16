@@ -27,9 +27,9 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.dark
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/temp',
+      initialRoute: '/',
       routes: {
-        '/' : (context) => TempScreen(),
+        '/' : (context) => Load(),
         '/signin' : (context) => SigninPage(),
         '/home' : (context) => HomePage(),
         '/signup' : (context) => SignupPage(),
