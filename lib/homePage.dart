@@ -40,43 +40,33 @@ class _HomePageState extends State<HomePage> {
   var selectedCompIndex = 0;
 
 
-  void getData(String comp, DateTime date) async{
-    await provider.getDataFromFirestore("ASHOKLEY", date.toString()).then((value) {
+// void getData(String comp, DateTime date) async{
+//   await provider.getDataFromFirestore("ASHOKLEY", date.toString()).then((value) {
 
-        st = Stock(
-          d,
-          provider.stock.openPrice,
-          provider.stock.closePrice,
-          provider.stock.volume,
-          provider.stock.high,
-          provider.stock.low,
-          provider.stock.adjClose,
-        );
-        rt = Return(
-          provider.returnData.YTD,
-          provider.returnData.oneWeek,
-          provider.returnData.oneMonth,
-          provider.returnData.threeMonth,
-          provider.returnData.sixMonth,
-          provider.returnData.oneYear,
-          provider.returnData.twoYear,
-          provider.returnData.threeMonth,
-        );
-      print(provider.stock.openPrice.toString());
-      print(provider.stock.closePrice.toString());
-      print(provider.stock.high.toString());
-      print(provider.stock.low.toString());
-      print(provider.stock.volume.toString());
-      print(provider.stock.adjClose.toString());
-      print(provider.returnData.oneMonth.price.toString());
-      print(provider.returnData.threeMonth.price.toString());
-      print(provider.returnData.sixMonth.price.toString());
-      print(provider.returnData.oneYear.price.toString());
-      print(provider.returnData.twoYear.price.toString());
-      print(provider.returnData.threeYear.price.toString());
-      print(provider.returnData.oneWeek.price.toString());
-    });
-  }
+//       st = Stock(
+//         d,
+//         provider.stock.openPrice,
+//         provider.stock.closePrice,
+//         provider.stock.volume,
+//         provider.stock.high,
+//         provider.stock.low,
+//         provider.stock.adjClose,
+//       );
+//       rt = Return(
+//         provider.returnData.YTD,
+//         provider.returnData.oneWeek,
+//         provider.returnData.oneMonth,
+//         provider.returnData.threeMonth,
+//         provider.returnData.sixMonth,
+//         provider.returnData.oneYear,
+//         provider.returnData.twoYear,
+//         provider.returnData.threeMonth,
+//       );
+//     print(provider.stock.openPrice.toString());
+//     print(provider.stock.closePrice.toString());
+//     print(provider.stock.high.toString());
+//   });
+// }
 
   Future <bool> _onPressedBack(){
     return showDialog(
@@ -318,13 +308,6 @@ class _HomePageState extends State<HomePage> {
               );
               print("jbsvh45678987632345678i9o");
                print(provider.returnData.YTD.price.toString());
-               print(provider.returnData.oneMonth.price.toString());
-               print(provider.returnData.threeMonth.price.toString());
-               print(provider.returnData.sixMonth.price.toString());
-               print(provider.returnData.oneYear.price.toString());
-               print(provider.returnData.twoYear.price.toString());
-               print(provider.returnData.threeYear.price.toString());
-               print(provider.returnData.oneWeek.price.toString());
             });
             setState(() {
               st = sto;
