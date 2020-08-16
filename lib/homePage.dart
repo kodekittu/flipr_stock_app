@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   );
   Stock sto;
   String companyData = "null";
+  List<ChartGraphData> tempList = [];
 
 
   ProviderTemp providerTemp = ProviderTemp(0);
@@ -258,7 +259,7 @@ class _HomePageState extends State<HomePage> {
                 child: ListView(
                   children: [
                     Container(
-                      child:  graphChart(context, listOfStockData, _isloading),
+                      child: _isloading? CircularProgressIndicator(backgroundColor: Colors.blueAccent,) : graphChart(context, listOfStockData),
                     ),
                     Divider(
                       color: Colors.grey,
@@ -359,9 +360,13 @@ class _HomePageState extends State<HomePage> {
               print("jbsvh45678987632345678i9o");
                print(provider.returnData.YTD.price.toString());
             });
+            await providerTemp.getListOfStockData(company[index], DateTime.parse("2020-08-13")).then((value) {
+              tempList = value;
+            });
             setState(() {
               st = sto;
               rt = rtn;
+              listOfStockData = tempList;
             });
         },
         child: Row(
