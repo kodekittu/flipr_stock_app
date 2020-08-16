@@ -1,4 +1,5 @@
 import 'package:flipr_stock_app/chart/chart.dart';
+import 'package:flipr_stock_app/provider.dart';
 import 'package:flipr_stock_app/widgets/notificationBar.dart';
 import 'package:flipr_stock_app/widgets/returns.dart';
 import 'package:flipr_stock_app/widgets/withSlider.dart';
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  ProviderTemp providerTemp = ProviderTemp(0);
   bool nTap = false;
   final TextStyle dropdownMenuLabel =
   TextStyle(color: Colors.white, fontSize: 18);

@@ -1,4 +1,5 @@
 import 'package:flipr_stock_app/load_page.dart';
+import 'package:flipr_stock_app/tempScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -26,12 +27,13 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.dark
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/temp',
       routes: {
-        '/' : (context) => Load(),
+        '/' : (context) => TempScreen(),
         '/signin' : (context) => SigninPage(),
         '/home' : (context) => HomePage(),
         '/signup' : (context) => SignupPage(),
+        '/temp' : (context) => TempScreen()
       },
     );
   }
