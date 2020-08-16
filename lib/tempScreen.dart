@@ -33,7 +33,6 @@ class TempScreen extends StatelessWidget {
                     print(provider.returnData.twoYear.price.toString());
                     print(provider.returnData.threeYear.price.toString());
                     print(provider.returnData.oneWeek.price.toString());
-
                   });
                 },
               )

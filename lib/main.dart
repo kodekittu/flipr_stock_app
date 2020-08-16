@@ -49,3 +49,10 @@ showToast(String text) {
     textColor: Colors.tealAccent
   );
 }
+
+/*
+var random = new Random();
+
+    // Printing Random Number between 1 to 100 on Terminal Window.
+    print(random.nextInt(100));
+ */

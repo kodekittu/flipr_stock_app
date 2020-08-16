@@ -1,4 +1,7 @@
 import 'package:flipr_stock_app/chart/chart.dart';
+import 'package:flipr_stock_app/model/return.dart';
+import 'package:flipr_stock_app/model/retutnSingleStock.dart';
+import 'package:flipr_stock_app/model/stock.dart';
 import 'package:flipr_stock_app/provider.dart';
 import 'package:flipr_stock_app/widgets/notificationBar.dart';
 import 'package:flipr_stock_app/widgets/returns.dart';
@@ -16,8 +19,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  DateTime d = DateTime.now();
+  ProviderTemp provider = ProviderTemp(0);
+  Stock st =  Stock(DateTime.now(), 38456.64, 61.09, 245006352, 62.0, 52.29,61.09);
+  Return  rtn;
+  Return rt = Return(
+    ReturnSingleStock(17.82, true),ReturnSingleStock(-7.39, true),
+    ReturnSingleStock(-22.26, true),ReturnSingleStock(31.96, true),
+    ReturnSingleStock(16.60, true),ReturnSingleStock(51.68, true),
+    ReturnSingleStock(55.83, true),ReturnSingleStock(-6.85, true),
+  );
+  Stock sto;
   String companyData = "null";
-  ProviderTemp providerTemp = ProviderTemp(0);
   bool nTap = false;
   final TextStyle dropdownMenuLabel =
   TextStyle(color: Colors.white, fontSize: 18);
@@ -26,7 +39,44 @@ class _HomePageState extends State<HomePage> {
   List<String> company = ["ASHOKLEY", "BSE (Sensex)", "BSESN", "CIPLA", "EICHERMOT", "NSE (Nifty)", "NSEI", "RELIANCE", "TATASTEEL"];
   var selectedCompIndex = 0;
 
-  DateTime d = DateTime.now();
+
+  void getData(String comp, DateTime date) async{
+    await provider.getDataFromFirestore("ASHOKLEY", date.toString()).then((value) {
+
+        st = Stock(
+          d,
+          provider.stock.openPrice,
+          provider.stock.closePrice,
+          provider.stock.volume,
+          provider.stock.high,
+          provider.stock.low,
+          provider.stock.adjClose,
+        );
+        rt = Return(
+          provider.returnData.YTD,
+          provider.returnData.oneWeek,
+          provider.returnData.oneMonth,
+          provider.returnData.threeMonth,
+          provider.returnData.sixMonth,
+          provider.returnData.oneYear,
+          provider.returnData.twoYear,
+          provider.returnData.threeMonth,
+        );
+      print(provider.stock.openPrice.toString());
+      print(provider.stock.closePrice.toString());
+      print(provider.stock.high.toString());
+      print(provider.stock.low.toString());
+      print(provider.stock.volume.toString());
+      print(provider.stock.adjClose.toString());
+      print(provider.returnData.oneMonth.price.toString());
+      print(provider.returnData.threeMonth.price.toString());
+      print(provider.returnData.sixMonth.price.toString());
+      print(provider.returnData.oneYear.price.toString());
+      print(provider.returnData.twoYear.price.toString());
+      print(provider.returnData.threeYear.price.toString());
+      print(provider.returnData.oneWeek.price.toString());
+    });
+  }
 
   Future <bool> _onPressedBack(){
     return showDialog(
@@ -46,6 +96,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData data = MediaQuery.of(context);
@@ -106,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                       dense: true,
                         contentPadding: EdgeInsets.symmetric(horizontal: 1),
                         title: dropDown(),
-                        subtitle: Text("23416.43 ",
+                        subtitle: Text( st.openPrice.toString(),
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold
                           ),
@@ -182,10 +233,10 @@ class _HomePageState extends State<HomePage> {
                       physics: ScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       children: [
-                        tile("OPEN PRICE", "34,864.87"),
-                        tileWithSlider("TODAY'S LOW/HIGH", "34,864.87","39,864.87",  context),
-                        tile("PREVIOUS CLOSE", "34,864.87"),
-                        tileWithSlider("TODAY'S LOW/HIGH", "34,864.87","39,864.87",  context),
+                        tile("OPEN PRICE", st.openPrice != null ? st.openPrice.toString() : "null"),
+                        tileWithSlider("TODAY'S LOW/HIGH", st.low.toString(),st.high.toString(),  context),
+                        tile("PREVIOUS CLOSE", st.closePrice.toString()),
+                        tileWithSlider("52 KW LOW/HIGH", st.low.toString(),st.high.toString(),  context),
                       ],
                     ),
                     heading("Returns"),
@@ -199,14 +250,14 @@ class _HomePageState extends State<HomePage> {
                       physics: ScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       children: [
-                        returnTile("YTD", "-8.77%", Colors.red),
-                        returnTile("1 WEEK", "-8.77%", Colors.red),
-                        returnTile("1 MONTH", "1.77%", Colors.green),
-                        returnTile("3 MONTHS", "18.77%", Colors.green),
-                        returnTile("6 MONTH", "-3.77%", Colors.red),
-                        returnTile("1 YEAR", "8.77%", Colors.green),
-                        returnTile("2 YEAR", "-1.77%", Colors.red),
-                        returnTile("3 YEAR", "5.7%", Colors.green),
+                       returnTile("YTD", double.parse((rt.YTD.price).toStringAsFixed(2)).toString(), rt.YTD.price < 0 ? Colors.red : Colors.green),
+                       returnTile("1 WEEK", double.parse((rt.oneWeek.price).toStringAsFixed(2)).toString(), rt.oneWeek.price < 0 ? Colors.red : Colors.green),
+                       returnTile("1 MONTH", double.parse((rt.oneMonth.price).toStringAsFixed(2)).toString(), rt.oneMonth.price < 0 ? Colors.red : Colors.green),
+                       returnTile("3 MONTHS", double.parse((rt.threeMonth.price).toStringAsFixed(2)).toString(), rt.threeMonth.price < 0 ? Colors.red : Colors.green),
+                       returnTile("6 MONTH", double.parse((rt.sixMonth.price).toStringAsFixed(2)).toString(), rt.sixMonth.price < 0 ? Colors.red : Colors.green),
+                       returnTile("1 YEAR", double.parse((rt.oneYear.price).toStringAsFixed(2)).toString(), rt.oneYear.price < 0 ? Colors.red : Colors.green),
+                       returnTile("2 YEAR", double.parse((rt.twoYear.price).toStringAsFixed(2)).toString(), rt.twoYear.price < 0 ? Colors.red : Colors.green),
+                       returnTile("3 YEAR", double.parse((rt.threeYear.price).toStringAsFixed(2)).toString(), rt.threeYear.price < 0 ? Colors.red : Colors.green),
                       ],
                     ),
                     heading("Simple Moving Averages"),
@@ -221,16 +272,11 @@ class _HomePageState extends State<HomePage> {
                       scrollDirection: Axis.vertical,
                       children: [
                         tile("30 DAYS", "34,864.87"),
-                        tile("50 DAYS", "34,864.87"),
-                        tile("150 DAYS", "34,864.87"),
-                        tile("200 DAYS", "34,864.87"),
+                        tile("50 DAYS", "44,84.87"),
+                        tile("150 DAYS", "3o,864.07"),
+                        tile("200 DAYS", "14,004.01"),
                       ],
                     ),
-                    Container(
-                      child: Text(
-                        companyData, style: TextStyle(fontSize: 18),
-                      ),
-                    )
                   ],
                 ),
               )
@@ -250,12 +296,39 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               selectedCompIndex = index;
             });
-            await provider.getDataFromFirestore(company[index],  "2015-08-14").then((value) {
-              print(provider.stock.openPrice.toString());
-              print(provider.returnData.oneMonth.price.toString());
+            await provider.getDataFromFirestore(company[index], "2020-08-13").then((value){
+               sto = Stock(
+                d,
+                provider.stock.openPrice != null ? double.parse((provider.stock.openPrice).toStringAsFixed(2)) : "null",
+                provider.stock.closePrice != null ? double.parse((provider.stock.closePrice).toStringAsFixed(2)) : "null",
+                provider.stock.volume!= null ? provider.stock.volume : "null",
+                provider.stock.high!= null ? double.parse((provider.stock.high).toStringAsFixed(2)) : "null",
+                provider.stock.low!= null ? double.parse((provider.stock.low).toStringAsFixed(2)) : "null",
+                provider.stock.adjClose!= null ? double.parse((provider.stock.adjClose).toStringAsFixed(2)) : "null",
+              );
+               rtn = Return(
+                provider.returnData.YTD ,//!= null ? double.parse((provider.returnData.YTD.price).toStringAsFixed(2)) : "null",
+                provider.returnData.oneWeek   ,// != null ? double.parse((provider.returnData.oneWeek.price).toStringAsFixed(2)) : "null",
+                provider.returnData.oneMonth  ,//  != null ? double.parse((provider.returnData.oneMonth.price).toStringAsFixed(2)) : "null",
+                provider.returnData.threeMonth,//       != null ? double.parse((provider.returnData.threeMonth.price).toStringAsFixed(2)) : "null",
+                provider.returnData.sixMonth  ,//   != null ? double.parse((provider.returnData.sixMonth.price).toStringAsFixed(2)) : "null",
+                provider.returnData.oneYear   ,//    != null ? double.parse((provider.returnData.oneYear.price).toStringAsFixed(2)) : "null",
+                provider.returnData.twoYear   ,//    != null ? double.parse((provider.returnData.twoYear.price).toStringAsFixed(2)) : "null",
+                provider.returnData.threeYear ,//    != null ? double.parse((provider.returnData.threeYear.price).toStringAsFixed(2)) : "null",
+              );
+              print("jbsvh45678987632345678i9o");
+               print(provider.returnData.YTD.price.toString());
+               print(provider.returnData.oneMonth.price.toString());
+               print(provider.returnData.threeMonth.price.toString());
+               print(provider.returnData.sixMonth.price.toString());
+               print(provider.returnData.oneYear.price.toString());
+               print(provider.returnData.twoYear.price.toString());
+               print(provider.returnData.threeYear.price.toString());
+               print(provider.returnData.oneWeek.price.toString());
             });
             setState(() {
-              companyData =" ${provider.stock.openPrice.toString()}       ${provider.returnData.oneMonth.price.toString()}";
+              st = sto;
+              rt = rtn;
             });
         },
         child: Row(
