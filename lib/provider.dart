@@ -47,12 +47,12 @@ class ProviderTemp {
 
     YTD = await returnPercentageCalculation(DateTime(dateTime.year-1, dateTime.month, dateTime.day), stockPriceOfDay, collectionName);
     oneWeek = await returnPercentageCalculation(DateTime(dateTime.year, dateTime.month, dateTime.day-7), stockPriceOfDay, collectionName);
-    oneMonth = await returnPercentageCalculation(DateTime(dateTime.year, dateTime.month-1, dateTime.day), stockPriceOfDay, collectionName);
-    threeMonth = await returnPercentageCalculation(DateTime(dateTime.year, dateTime.month-3, dateTime.day), stockPriceOfDay, collectionName);
-    sixMonth = await returnPercentageCalculation(DateTime(dateTime.year, dateTime.month-6, dateTime.day), stockPriceOfDay, collectionName);
-    oneYear = await returnPercentageCalculation(DateTime(dateTime.year-1, dateTime.month, dateTime.day), stockPriceOfDay, collectionName);
-    twoYear = await returnPercentageCalculation(DateTime(dateTime.year-2, dateTime.month, dateTime.day), stockPriceOfDay, collectionName);
-    threeYear = await returnPercentageCalculation(DateTime(dateTime.year-3, dateTime.month, dateTime.day), stockPriceOfDay, collectionName);
+    oneMonth = await returnPercentageCalculation(DateTime(dateTime.year, dateTime.month, dateTime.day-28), stockPriceOfDay, collectionName);
+    threeMonth = await returnPercentageCalculation(DateTime(dateTime.year, dateTime.month, dateTime.day-84), stockPriceOfDay, collectionName);
+    sixMonth = await returnPercentageCalculation(DateTime(dateTime.year, dateTime.month, dateTime.day-168), stockPriceOfDay, collectionName);
+    oneYear = await returnPercentageCalculation(DateTime(dateTime.year, dateTime.month, dateTime.day-336), stockPriceOfDay, collectionName);
+    twoYear = await returnPercentageCalculation(DateTime(dateTime.year, dateTime.month, dateTime.day-672), stockPriceOfDay, collectionName);
+    threeYear = await returnPercentageCalculation(DateTime(dateTime.year, dateTime.month, dateTime.day-1008), stockPriceOfDay, collectionName);
 
     returnData =  Return(
       YTD,
@@ -68,15 +68,17 @@ class ProviderTemp {
   Future<ReturnSingleStock> returnPercentageCalculation(DateTime x, double stockPriceOfDay, String collectionName) async{
     double stockPriceValue;
     try{
-      final res = await firestoreInstance.collection(collectionName).document(x.toString()).get().then((value) async {
+       await firestoreInstance.collection(collectionName).document(DateFormat("y-MM-dd").format(x)).get().then((value)  {
         stockPriceValue = double.parse(value.data['Open']);
         //return stockPriceValue;
       });
       double percentage = ((stockPriceValue - stockPriceOfDay)*100.0)/stockPriceValue;
-      print('date'+x.toIso8601String()+'  percenteahe = $percentage');
+      print(DateFormat("y-MM-dd").format(x)+ "  percentage === $percentage");
       return ReturnSingleStock(percentage,true);
     }
     catch(e) {
+      print(e);
+      print(DateFormat("y-MM-dd").format(x)+ "  percentage === 0");
       return ReturnSingleStock(0,false);
     }
   }
