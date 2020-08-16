@@ -1,13 +1,21 @@
 
+import 'dart:math';
+
 import 'package:flipr_stock_app/model/ChartGraphData.dart';
 import 'package:flipr_stock_app/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-Widget graphChart(context, ChartGraphData, isLoadedList) {
+Widget graphChart(context, List<ChartGraphData> chartGraphData) {
+  double maxm =  chartGraphData.elementAt(0).value;
+  double minm = maxm;
+  chartGraphData.forEach((element) {
+    maxm = max(maxm, element.value);
+    minm = min(minm, element.value);});
+
   MediaQueryData data = MediaQuery.of(context);
-    return isLoadedList ==false ? CircularProgressIndicator(backgroundColor: Colors.lightBlueAccent,) :Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -21,13 +29,13 @@ Widget graphChart(context, ChartGraphData, isLoadedList) {
                 majorGridLines: MajorGridLines(width: 1),
             ),
             primaryYAxis: NumericAxis(
-                minimum: 0,
-                maximum: 6000,
+                minimum: minm-100,
+                maximum: maxm+100,
                 interval: 100,
                 axisLine: AxisLine(width: 1),
                 labelFormat: '{value}',
                 majorTickLines: MajorTickLines(size: 0)),
-            series: getMultiColoredLineSeries(ChartGraphData),
+            series: getMultiColoredLineSeries(chartGraphData),
             trackballBehavior: TrackballBehavior(
                 enable: true,lineColor: Colors.lightBlueAccent,
                 activationMode: ActivationMode.singleTap,

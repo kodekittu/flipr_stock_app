@@ -39,20 +39,23 @@ class ProviderTemp {
   Future<List<ChartGraphData> > getListOfStockData(String collectionName, DateTime dateTime) async{
     List<ChartGraphData > listOfData = [];
     print("yes");
-    for(int i=0; i<15; ++i) {
-      try {
-        await firestoreInstance.collection(collectionName).document(DateFormat("y-MM-dd").format(dateTime)).get().then((value) {
-          print(value.data['Open']);
-          listOfData.add(ChartGraphData(dateTime,value.data['Open']));
-        });
-        dateTime.subtract(Duration(days: 1));
-      }
-      catch(e) {
-        print(e);
-      }
-    }
-    print("$i done");
+    await firestoreInstance.collection(collectionName).getDocuments().then((querySnapshot) {
+      querySnapshot.documents.forEach((result) {
+        Map<String, Object> val = result.data;
+        try{
+          DateTime dateTimeObject = DateTime.parse(result.documentID);
+          double data = double.parse(val['Open']);
+          listOfData.add(ChartGraphData(dateTimeObject, data));
+        }
+        catch(e){
+          print(e);
+        }
+        //listOfData.add(ChartGraphData(DateTime.parse(result.documentID), data));
+      });
+      print(listOfData.length);
+    });
     return listOfData;
+
   }
   Future<void> stockToReturn(DateTime dateTime, double stockPriceOfDay, String collectionName) async{
     ReturnSingleStock YTD;
