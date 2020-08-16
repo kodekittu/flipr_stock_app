@@ -1,4 +1,5 @@
 import 'package:flipr_stock_app/load_page.dart';
+import 'package:flipr_stock_app/tempScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -26,12 +27,15 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.dark
       ),
       debugShowCheckedModeBanner: false,
+
       initialRoute: '/',
+
       routes: {
         '/' : (context) => Load(),
         '/signin' : (context) => SigninPage(),
         '/home' : (context) => HomePage(),
         '/signup' : (context) => SignupPage(),
+        '/temp' : (context) => TempScreen()
       },
     );
   }
@@ -47,3 +51,10 @@ showToast(String text) {
     textColor: Colors.tealAccent
   );
 }
+
+/*
+var random = new Random();
+
+    // Printing Random Number between 1 to 100 on Terminal Window.
+    print(random.nextInt(100));
+ */

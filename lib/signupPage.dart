@@ -190,7 +190,7 @@ class _SignupPageState extends State<SignupPage> {
 
   Future<http.Response> signup(String password, String email,)
   async {
-    final url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAneWzjmbqe3PQ3mMYRtCMG9M8495vIzUQ';
+    final url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBiqcmFw0tVc-OBVf_dGpHO_nZ7eD7iJAM';
     setState(() {
       isLoading = true;
     });

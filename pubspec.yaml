@@ -20,6 +20,8 @@ dependencies:
   flutter_swiper: ^1.1.6
   syncfusion_flutter_charts: ^18.2.44
   shared_preferences: ^0.5.8
+  cloud_firestore: ^0.13.7
+  firebase_core: ^0.4.4+3
 
 dev_dependencies:
   flutter_test:
