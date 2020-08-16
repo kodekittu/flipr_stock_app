@@ -78,28 +78,32 @@ class _HomePageState extends State<HomePage> {
    });
  }
 
-  bool isLoadedList = false;
-  bool isInit = true;
-  didChangeDependencies() {
-    if(isInit) {
+  var _isinit=true;
+  var _isloading = false;
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if(_isinit){
       setState(() {
-        isLoadedList = true;
+        _isloading=true;
       });
-    }
-    providerTemp.getListOfStockData("ASHOKLEY", d).then((value) {
-      setState(() {
-        isLoadedList = false;
-        listOfStockData = value;
-      });
+      providerTemp.getListOfStockData("ASHOKLEY", d).then((value) {
+        setState(() {
+          _isloading = false;
+          _isinit =false;
+          print("list of stock length ");
+          print(value.length);
+          listOfStockData = value;
+        });
 
-    });
-    if(listOfStockData.length > 0){
-      setState(() {
-        isInit =false;
       });
+      if(listOfStockData.length!=0)
+        _isinit=false;
+//      _isinit=false;
     }
-
+    super.didChangeDependencies();
   }
+
   Future <bool> _onPressedBack(){
     return showDialog(
       context: context,
@@ -254,7 +258,7 @@ class _HomePageState extends State<HomePage> {
                 child: ListView(
                   children: [
                     Container(
-                      child:  graphChart(context, listOfStockData, isLoadedList),
+                      child:  graphChart(context, listOfStockData, _isloading),
                     ),
                     Divider(
                       color: Colors.grey,
