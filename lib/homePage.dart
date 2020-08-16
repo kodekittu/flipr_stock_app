@@ -258,7 +258,7 @@ class _HomePageState extends State<HomePage> {
                 child: ListView(
                   children: [
                     Container(
-                      child:  graphChart(context, listOfStockData, _isloading),
+                      child: _isloading? CircularProgressIndicator(backgroundColor: Colors.blueAccent,) : graphChart(context, listOfStockData),
                     ),
                     Divider(
                       color: Colors.grey,
